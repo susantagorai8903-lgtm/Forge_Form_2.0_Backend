@@ -8,7 +8,7 @@ Configure environment variables in Render's secret settings. Run `alembic upgrad
 
 ## Neon
 
-Set `DATABASE_URL` to the Neon connection string using `postgresql+asyncpg://`. Production mode configures SSL and a modest application pool. Use a separate database or branch for tests and migrations.
+The Neon CLI writes `DATABASE_URL` (pooled) and `DATABASE_URL_UNPOOLED` (direct) to `.env.local`. The application loads `.env.local` as well as `.env`; keep both files out of version control. API traffic uses the pooled URL, while Alembic automatically uses the direct URL for migrations. Use a separate Neon branch or database for migration testing before applying changes to production.
 
 ## Kubernetes
 

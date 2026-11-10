@@ -34,7 +34,7 @@ Use `docker compose logs -f api` or `docker compose logs -f worker`. The outbox 
 
 ## Configuration and database
 
-Copy `.env.example` to `.env`. Never commit `.env` or live Kubernetes secrets. Set `DATABASE_URL` to a Neon `postgresql+asyncpg://` URL. Production requires a unique JWT secret and exact CORS origins; production database connections use SSL and a small pool suitable for serverless PostgreSQL.
+Copy `.env.example` to `.env`, or use the Neon CLI to write connection settings to `.env.local`; both files are loaded, with `.env.local` taking precedence. Never commit either file or live Kubernetes secrets. Neon supplies a pooled `DATABASE_URL` for API traffic and a direct `DATABASE_URL_UNPOOLED` for Alembic migrations. Production requires a unique JWT secret and exact CORS origins; production database connections use SSL and a small pool suitable for serverless PostgreSQL.
 
 Create and review migrations before deployment:
 

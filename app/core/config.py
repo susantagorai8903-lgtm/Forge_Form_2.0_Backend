@@ -7,7 +7,7 @@ from sqlalchemy.engine import make_url
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    model_config = SettingsConfigDict(env_file=(".env", ".env.local"), env_file_encoding="utf-8", extra="ignore")
 
     app_name: str = "Forge & Form Personal Training"
     app_env: str = "development"
@@ -42,14 +42,19 @@ class Settings(BaseSettings):
             return [origin.strip() for origin in value.split(",") if origin.strip()]
         return value
 
-    @field_validator("database_url")
+    database_url_unpooled: str | None = None
+
+    @field_validator("database_url", "database_url_unpooled")
     @classmethod
-    def require_async_database_driver(cls, value: str) -> str:
+    def require_async_database_driver(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
         url = make_url(value)
         if url.drivername in {"postgres", "postgresql"}:
             url = url.set(drivername="postgresql+asyncpg")
         query = dict(url.query)
         sslmode = query.pop("sslmode", None)
+        query.pop("channel_binding", None)
         if sslmode and "ssl" not in query:
             query["ssl"] = sslmode
         return url.set(query=query).render_as_string(hide_password=False)
