@@ -61,6 +61,8 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def validate_production_security(self) -> "Settings":
+        if self.frontend_url not in self.cors_origins:
+            self.cors_origins = [*self.cors_origins, self.frontend_url]
         if self.app_env == "production":
             if len(self.jwt_secret_key) < 32 or self.jwt_secret_key.startswith(("development-only", "replace-with")):
                 raise ValueError("Production requires a strong, unique JWT_SECRET_KEY")

@@ -6,8 +6,22 @@ from uuid import UUID
 from zoneinfo import ZoneInfoNotFoundError
 
 from app.main import app, request_counts
+from app.core.config import Settings
 from app.models import ContactEnquiry, EventOutbox
 from app.api.v1.endpoints import bookings
+
+
+def test_frontend_url_is_included_in_cors_origins():
+    settings = Settings(
+        _env_file=None,
+        frontend_url="https://forge-form-preview.vercel.app",
+        cors_origins=["http://localhost:3000"],
+    )
+
+    assert settings.cors_origins == [
+        "http://localhost:3000",
+        "https://forge-form-preview.vercel.app",
+    ]
 
 
 @pytest.mark.asyncio

@@ -57,7 +57,7 @@ Create the first administrator with `python -m scripts.create_admin`; it prompts
 
 ## API and frontend
 
-The Next.js forms send the exact `name`, `email`, `phone`, `program`, `date`, `time`, `goals`, and related contact fields documented in [frontend integration](docs/frontend-integration.md). Set the frontend's `NEXT_PUBLIC_API_BASE_URL` to the backend origin and configure backend `CORS_ORIGINS`.
+The Next.js forms send the exact `name`, `email`, `phone`, `program`, `date`, `time`, `goals`, and related contact fields documented in [frontend integration](docs/frontend-integration.md). Set the frontend's `NEXT_PUBLIC_API_BASE_URL` to the backend origin only, and configure backend `FRONTEND_URL` and `CORS_ORIGINS` with the exact approved frontend origins. Production CORS must not use `*`.
 
 Consultation submissions are requests with `PENDING` status, not confirmed bookings. Opening hours and capacity remain unconfigured by default; `BOOKING_CAPACITY_PER_SLOT` may be configured by the business. Public content APIs expose active programs/trainers, published testimonials/articles, and active locations. The existing frontend currently renders local content data rather than calling its content services.
 
