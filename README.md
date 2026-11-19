@@ -23,8 +23,8 @@ python -m venv .venv
 pip install -r requirements.txt
 Copy-Item .env.example .env
 docker compose up -d postgres redpanda
-python -m alembic upgrade head
-python -m scripts.seed_data
+docker compose run --build --rm api python -m alembic upgrade head
+docker compose run --build --rm api python -m scripts.seed_data
 docker compose up --build -d
 ```
 
@@ -34,7 +34,7 @@ Use `docker compose logs -f api` or `docker compose logs -f worker`. The outbox 
 
 ## Configuration and database
 
-Copy `.env.example` to `.env`, or use the Neon CLI to write connection settings to `.env.local`; both files are loaded, with `.env.local` taking precedence. Never commit either file or live Kubernetes secrets. Neon supplies a pooled `DATABASE_URL` for API traffic and a direct `DATABASE_URL_UNPOOLED` for Alembic migrations. Production requires a unique JWT secret and exact CORS origins; production database connections use SSL and a small pool suitable for serverless PostgreSQL.
+Copy `.env.example` to `.env`; both example database URLs target the local Compose database. Compose also loads optional `.env.local` after `.env`, so Neon settings there take precedence for the API and workers. Host-side Alembic loads `.env.local` after `.env` as well, using the direct URL for migrations. Never commit either file or live Kubernetes secrets. Neon supplies a pooled `DATABASE_URL` for API traffic and a direct `DATABASE_URL_UNPOOLED` for Alembic migrations. Production requires a unique JWT secret and exact CORS origins; production database connections use SSL and a small pool suitable for serverless PostgreSQL.
 
 Create and review migrations before deployment:
 

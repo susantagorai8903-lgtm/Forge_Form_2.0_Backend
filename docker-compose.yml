@@ -3,9 +3,11 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
-    env_file: .env
+    env_file:
+      - .env
+      - path: .env.local
+        required: false
     environment:
-      DATABASE_URL: postgresql+asyncpg://forgeform:local-dev-only@postgres:5432/forgeform
       KAFKA_BOOTSTRAP_SERVERS: redpanda:9092
     ports:
       - "8000:8000"
@@ -25,9 +27,11 @@ services:
       context: .
       dockerfile: docker/Dockerfile
     command: ["python", "-m", "app.workers.outbox_worker"]
-    env_file: .env
+    env_file:
+      - .env
+      - path: .env.local
+        required: false
     environment:
-      DATABASE_URL: postgresql+asyncpg://forgeform:local-dev-only@postgres:5432/forgeform
       KAFKA_BOOTSTRAP_SERVERS: redpanda:9092
     depends_on:
       postgres:
@@ -41,9 +45,11 @@ services:
       context: .
       dockerfile: docker/Dockerfile
     command: ["python", "-m", "app.workers.notification_worker"]
-    env_file: .env
+    env_file:
+      - .env
+      - path: .env.local
+        required: false
     environment:
-      DATABASE_URL: postgresql+asyncpg://forgeform:local-dev-only@postgres:5432/forgeform
       KAFKA_BOOTSTRAP_SERVERS: redpanda:9092
     depends_on:
       postgres:

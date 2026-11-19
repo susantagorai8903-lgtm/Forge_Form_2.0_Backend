@@ -16,4 +16,4 @@ Review the example ConfigMap and Secret, then create the actual secret out-of-ba
 
 ## Local Compose
 
-From `backend`, copy `.env.example` to `.env`, then run `docker compose up --build`; apply migrations in another terminal with `alembic upgrade head` and seed with `python -m scripts.seed_data`. Stop with `docker compose down`; volumes persist. Local-only credentials in Compose are not production credentials.
+From `backend`, copy `.env.example` to `.env`, then run `docker compose up --build`; apply migrations and seed through the Compose API service with `docker compose run --rm api python -m alembic upgrade head` and `docker compose run --rm api python -m scripts.seed_data`. Optional `.env.local` settings override `.env` in the Compose services. Stop with `docker compose down`; volumes persist. Local-only credentials in Compose are not production credentials.
